@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -50,5 +51,18 @@ public:
 	UFUNCTION()
 	void OnMoveCompleted(FAIRequestID aiID, EPathFollowingResult::Type result);
 	void TakeDamage(float _damage);
+	
+	UPROPERTY(EditAnywhere, Category = Components)
+	USphereComponent* punchLeftCollider;
+	
+	UPROPERTY(EditAnywhere, Category = Components)
+	USphereComponent* punchRightCollider;
+	
+	UFUNCTION()
+	void OnPunchBeginOverlap(UPrimitiveComponent* overlappedCOmponent, AActor* otherActor, 
+		UPrimitiveComponent* otherComponent, int otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+	
+	void ActivateColliders();
+	void DesactivateColliders();
 };
 

@@ -18,7 +18,7 @@ class PLATAFORMASCPP_API UEnemyAnimInstance : public UAnimInstance
 public: 
 	AEnemyCPP* enemy;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float horizontal;
+	float horizontalEnemy;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool die;
 	

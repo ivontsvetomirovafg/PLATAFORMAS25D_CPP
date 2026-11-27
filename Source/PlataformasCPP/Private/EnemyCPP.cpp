@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "MyCharacterCPP.h"
+#include "Components/SphereComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 // Sets default values
@@ -14,6 +15,16 @@ AEnemyCPP::AEnemyCPP()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	pawnSensing = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensing");
+	
+	punchLeftCollider = CreateDefaultSubobject<USphereComponent>("Left punch");
+	punchRightCollider = CreateDefaultSubobject<USphereComponent>("Right punch");
+	
+	const FAttachmentTransformRules attachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, 
+		EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	punchLeftCollider->AttachToComponent(GetMesh(), attachmentRules,"LeftHand");
+	punchRightCollider->AttachToComponent(GetMesh(), attachmentRules,"RightHand");
+	punchLeftCollider->SetSphereRadius(20);
+	punchRightCollider->SetSphereRadius(20);
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +37,11 @@ void AEnemyCPP::BeginPlay()
 	if (IsValid(aiController))
 	{
 		aiController->ReceiveMoveCompleted.AddDynamic(this, &AEnemyCPP::OnMoveCompleted);
+	}
+	if (IsValid(punchLeftCollider) && IsValid(punchRightCollider))
+	{
+		punchLeftCollider->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCPP::OnPunchBeginOverlap);
+		punchRightCollider->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCPP::OnPunchBeginOverlap);
 	}
 }
 
@@ -87,4 +103,26 @@ void AEnemyCPP::TakeDamage(float _damage)
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1,5.f, FColor::Magenta,"Enemy Daño");
+}
+
+void AEnemyCPP::OnPunchBeginOverlap(UPrimitiveComponent* overlappedCOmponent, AActor* otherActor,
+	UPrimitiveComponent* otherComponent, int otherBodyIndex, bool fromSweep, const FHitResult& sweepResult)
+{
+	AMyCharacterCPP* player = Cast<AMyCharacterCPP>(otherActor);
+	if (IsValid(player))
+	{
+		player->TakeDamage(damage);
+	}
+}
+
+void AEnemyCPP::ActivateColliders()
+{
+	punchLeftCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	punchRightCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AEnemyCPP::DesactivateColliders()
+{
+	punchLeftCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	punchRightCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

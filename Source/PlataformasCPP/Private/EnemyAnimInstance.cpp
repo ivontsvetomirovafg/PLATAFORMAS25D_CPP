@@ -9,7 +9,7 @@ void UEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	
 	if (IsValid(enemy))
 	{
-		horizontal = FMath::Abs(enemy->horizontal);
+		horizontalEnemy = FMath::Abs(enemy->horizontal);
 		die = enemy-> death; 
 	}
 }
@@ -19,3 +19,5 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 	Super::NativeInitializeAnimation();
 	enemy = Cast<AEnemyCPP>(TryGetPawnOwner());
 }
+
+

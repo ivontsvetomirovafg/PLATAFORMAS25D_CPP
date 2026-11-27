@@ -80,6 +80,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = UI)
 	UMyUserWidgetCPP* gameplayWidget; //Esto coge un objeto
 	
+	UPROPERTY(EditAnywhere, Category = Audio)
+	USoundBase* jumpSFX;
+	UPROPERTY(EditAnywhere, Category = Audio)
+	USoundCue* hitSFX;
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

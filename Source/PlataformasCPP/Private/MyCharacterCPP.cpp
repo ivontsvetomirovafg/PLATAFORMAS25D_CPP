@@ -12,6 +12,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimMontage.h"
 #include "MyGameInstance.h"
+#include "SubManager.h"
+#include "Kismet/GameplayStatics.h"
 //#include "EnhancedLocalPlayerSubsystem.h"
 
 // Sets default values
@@ -84,7 +86,6 @@ void AMyCharacterCPP::Tick(float DeltaTime)
 	{
 		jumping = false;
 	}
-
 }
 
 // Called to bind functionality to input
@@ -130,6 +131,9 @@ void AMyCharacterCPP::Jumping(const FInputActionValue& value)
 	{
 		Jump();
 		jumping = true;
+		USubManager* audioManager = GetGameInstance()->GetSubsystem<USubManager>();
+		
+		audioManager->PlaySound(jumpSFX);
 	}
 }
 
